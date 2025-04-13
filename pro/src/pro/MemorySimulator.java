@@ -47,4 +47,70 @@ public class MemorySimulator {
 
         scanner.close();
     }
+
+    // First-Fit Allocation
+    public static boolean allocateFirstFit(MemoryBlock[] memory, String processID, int processSize) {
+        for (MemoryBlock block : memory) {
+            if (block.status.equals("free") && block.blockSize >= processSize) {
+                block.status = "allocated";
+                block.processID = processID;
+                block.internalFragmentation = block.blockSize - processSize;
+                System.out.println(processID + " allocated at address: " + block.startAddress +
+                        ", internal fragmentation: " + block.internalFragmentation);
+                return true;
+            }
+        }
+        System.out.println("Error: No suitable block found for process " + processID);
+        return false;
+    }
+
+    // Best-Fit Allocation
+    public static boolean allocateBestFit(MemoryBlock[] memory, String processID, int processSize) {
+        MemoryBlock bestBlock = null;
+
+        for (MemoryBlock block : memory) {
+            if (block.status.equals("free") && block.blockSize >= processSize) {
+                if (bestBlock == null || block.blockSize < bestBlock.blockSize) {
+                    bestBlock = block;
+                }
+            }
+        }
+
+        if (bestBlock != null) {
+            bestBlock.status = "allocated";
+            bestBlock.processID = processID;
+            bestBlock.internalFragmentation = bestBlock.blockSize - processSize;
+            System.out.println(processID + " allocated at address: " + bestBlock.startAddress +
+                    ", internal fragmentation: " + bestBlock.internalFragmentation);
+            return true;
+        }
+
+        System.out.println("Error: No suitable block found for process " + processID);
+        return false;
+    }
+
+    // Worst-Fit Allocation
+    public static boolean allocateWorstFit(MemoryBlock[] memory, String processID, int processSize) {
+        MemoryBlock worstBlock = null;
+
+        for (MemoryBlock block : memory) {
+            if (block.status.equals("free") && block.blockSize >= processSize) {
+                if (worstBlock == null || block.blockSize > worstBlock.blockSize) {
+                    worstBlock = block;
+                }
+            }
+        }
+
+        if (worstBlock != null) {
+            worstBlock.status = "allocated";
+            worstBlock.processID = processID;
+            worstBlock.internalFragmentation = worstBlock.blockSize - processSize;
+            System.out.println(processID + " allocated at address: " + worstBlock.startAddress +
+                    ", internal fragmentation: " + worstBlock.internalFragmentation);
+            return true;
+        }
+
+        System.out.println("Error: No suitable block found for process " + processID);
+        return false;
+    }
 }
