@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pro;
 
 import java.util.Scanner;
@@ -24,31 +20,98 @@ public class MemorySimulator {
             System.out.print("Enter size of block #" + (i + 1) + " in KB: ");
             int size = scanner.nextInt();
 
-            // Create the block and assign it to the array
             memory[i] = new MemoryBlock(size, currentStart);
-
-            // Update starting point for next block
             currentStart = memory[i].endAddress + 1;
         }
 
-        // 4. Print the initialized memory
-        System.out.println("\nMemory Blocks Initialized:");
-        System.out.println("Block#  Size(KB)  Start-End  Status  ProcessID  Fragmentation");
+        // 4. Ask user to choose allocation strategy
+        System.out.print("\nEnter allocation strategy (1 = First-Fit, 2 = Best-Fit, 3 = Worst-Fit): ");
+        int strategy = scanner.nextInt();
 
-        for (int i = 0; i < M; i++) {
-            MemoryBlock block = memory[i];
-            System.out.println("Block" + i + "   "
-                    + block.blockSize + "KB   "
-                    + block.startAddress + "-" + block.endAddress + "   "
-                    + block.status + "   "
-                    + block.processID + "   "
-                    + block.internalFragmentation);
+        boolean running = true;
+
+        while (running) {
+            // Display Menu
+            System.out.println("\n============================================");
+            System.out.println("1) Allocate memory for a process");
+            System.out.println("2) Deallocate memory");
+            System.out.println("3) Print memory status report");
+            System.out.println("4) Exit");
+            System.out.println("============================================");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // clear buffer
+
+            switch (choice) {
+                case 1 -> {
+                    // Allocation
+                    System.out.print("Enter process ID: ");
+                    String processID = scanner.nextLine();
+                    System.out.print("Enter process size (KB): ");
+                    int size = scanner.nextInt();
+
+                    boolean allocated = false;
+                    if (strategy == 1) {
+                        allocated = allocateFirstFit(memory, processID, size);
+                    } else if (strategy == 2) {
+                        allocated = allocateBestFit(memory, processID, size);
+                    } else if (strategy == 3) {
+                        allocated = allocateWorstFit(memory, processID, size);
+                    } else {
+                        System.out.println("Invalid strategy!");
+                    }
+
+                    if (!allocated) {
+                        System.out.println("Allocation failed: No suitable block available.");
+                    }
+                }
+                case 2 -> {
+                    // Deallocation
+                    System.out.print("Enter process ID to deallocate: ");
+                    String processID = scanner.nextLine();
+                    boolean found = false;
+                    for (MemoryBlock block : memory) {
+                        if (block.processID.equals(processID)) {
+                            block.status = "free";
+                            block.processID = "null";
+                            block.internalFragmentation = 0;
+                            found = true;
+                            System.out.println("Process " + processID + " has been deallocated.");
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        System.out.println("Error: Process ID not found.");
+                    }
+                }
+                case 3 -> {
+                    // Print memory status
+                    System.out.println("\nMemory Status Report:");
+                    System.out.println("==========================================================");
+                    System.out.println("Block#  Size  Start-End     Status     ProcessID  Fragmentation");
+                    System.out.println("==========================================================");
+                    for (int i = 0; i < memory.length; i++) {
+                        MemoryBlock b = memory[i];
+                        System.out.printf("Block%-2d  %-4d  %-5d-%-5d  %-9s  %-9s  %d\n",
+                                i, b.blockSize, b.startAddress, b.endAddress,
+                                b.status, b.processID, b.internalFragmentation);
+                    }
+                    System.out.println("==========================================================");
+                }
+                case 4 -> {
+                    // Exit
+                    running = false;
+                    System.out.println("Simulation ended. Goodbye!");
+                }
+                default -> System.out.println("Invalid choice. Please enter 1-4.");
+            }
         }
 
         scanner.close();
     }
 
-    // First-Fit Allocation
+    // Keep your allocation methods below...
+
     public static boolean allocateFirstFit(MemoryBlock[] memory, String processID, int processSize) {
         for (MemoryBlock block : memory) {
             if (block.status.equals("free") && block.blockSize >= processSize) {
@@ -60,14 +123,11 @@ public class MemorySimulator {
                 return true;
             }
         }
-        System.out.println("Error: No suitable block found for process " + processID);
         return false;
     }
 
-    // Best-Fit Allocation
     public static boolean allocateBestFit(MemoryBlock[] memory, String processID, int processSize) {
         MemoryBlock bestBlock = null;
-
         for (MemoryBlock block : memory) {
             if (block.status.equals("free") && block.blockSize >= processSize) {
                 if (bestBlock == null || block.blockSize < bestBlock.blockSize) {
@@ -75,7 +135,6 @@ public class MemorySimulator {
                 }
             }
         }
-
         if (bestBlock != null) {
             bestBlock.status = "allocated";
             bestBlock.processID = processID;
@@ -84,15 +143,11 @@ public class MemorySimulator {
                     ", and the internal fragmentation is " + bestBlock.internalFragmentation);
             return true;
         }
-
-        System.out.println("Error: No suitable block found for process " + processID);
         return false;
     }
 
-    // Worst-Fit Allocation
     public static boolean allocateWorstFit(MemoryBlock[] memory, String processID, int processSize) {
         MemoryBlock worstBlock = null;
-
         for (MemoryBlock block : memory) {
             if (block.status.equals("free") && block.blockSize >= processSize) {
                 if (worstBlock == null || block.blockSize > worstBlock.blockSize) {
@@ -100,7 +155,6 @@ public class MemorySimulator {
                 }
             }
         }
-
         if (worstBlock != null) {
             worstBlock.status = "allocated";
             worstBlock.processID = processID;
@@ -109,8 +163,6 @@ public class MemorySimulator {
                     ", and the internal fragmentation is " + worstBlock.internalFragmentation);
             return true;
         }
-
-        System.out.println("Error: No suitable block found for process " + processID);
         return false;
     }
 }
