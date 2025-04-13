@@ -55,8 +55,8 @@ public class MemorySimulator {
                 block.status = "allocated";
                 block.processID = processID;
                 block.internalFragmentation = block.blockSize - processSize;
-                System.out.println(processID + " allocated at address: " + block.startAddress +
-                        ", internal fragmentation: " + block.internalFragmentation);
+                System.out.println(processID + " Allocated at address " + block.startAddress +
+                        ", and the internal fragmentation is " + block.internalFragmentation);
                 return true;
             }
         }
@@ -80,8 +80,8 @@ public class MemorySimulator {
             bestBlock.status = "allocated";
             bestBlock.processID = processID;
             bestBlock.internalFragmentation = bestBlock.blockSize - processSize;
-            System.out.println(processID + " allocated at address: " + bestBlock.startAddress +
-                    ", internal fragmentation: " + bestBlock.internalFragmentation);
+            System.out.println(processID + " Allocated at address " + bestBlock.startAddress +
+                    ", and the internal fragmentation is " + bestBlock.internalFragmentation);
             return true;
         }
 
@@ -105,8 +105,8 @@ public class MemorySimulator {
             worstBlock.status = "allocated";
             worstBlock.processID = processID;
             worstBlock.internalFragmentation = worstBlock.blockSize - processSize;
-            System.out.println(processID + " allocated at address: " + worstBlock.startAddress +
-                    ", internal fragmentation: " + worstBlock.internalFragmentation);
+            System.out.println(processID + " Allocated at address " + worstBlock.startAddress +
+                    ", and the internal fragmentation is " + worstBlock.internalFragmentation);
             return true;
         }
 
