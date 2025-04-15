@@ -92,10 +92,10 @@ public class MemorySimulator {
                     System.out.println("==========================================================");
                     for (int i = 0; i < memory.length; i++) {
                         MemoryBlock b = memory[i];
-                        String fragmentation = (b.status.equals("allocated")) ? String.valueOf(b.internalFragmentation) : "-";
+                        String frag = b.status.equals("allocated") ? String.valueOf(b.internalFragmentation) : "-";
                         System.out.printf("Block%-2d  %-4d  %-5d-%-5d  %-9s  %-9s  %s\n",
                                 i, b.blockSize, b.startAddress, b.endAddress,
-                                b.status, b.processID, fragmentation);
+                                b.status, b.processID, frag);
                     }
                     System.out.println("==========================================================");
                 }
@@ -111,13 +111,12 @@ public class MemorySimulator {
         scanner.close();
     }
 
-    // First-Fit Allocation
     public static boolean allocateFirstFit(MemoryBlock[] memory, String processID, int processSize) {
         for (MemoryBlock block : memory) {
             if (block.status.equals("free") && block.blockSize >= processSize) {
                 block.status = "allocated";
                 block.processID = processID;
-                block.internalFragmentation = block.blockSize - processSize; // Calculate internal fragmentation
+                block.internalFragmentation = block.blockSize - processSize;
                 System.out.println(processID + " Allocated at address " + block.startAddress +
                         ", and the internal fragmentation is " + block.internalFragmentation);
                 return true;
@@ -126,7 +125,6 @@ public class MemorySimulator {
         return false;
     }
 
-    // Best-Fit Allocation
     public static boolean allocateBestFit(MemoryBlock[] memory, String processID, int processSize) {
         MemoryBlock bestBlock = null;
         for (MemoryBlock block : memory) {
@@ -139,7 +137,7 @@ public class MemorySimulator {
         if (bestBlock != null) {
             bestBlock.status = "allocated";
             bestBlock.processID = processID;
-            bestBlock.internalFragmentation = bestBlock.blockSize - processSize; // Calculate internal fragmentation
+            bestBlock.internalFragmentation = bestBlock.blockSize - processSize;
             System.out.println(processID + " Allocated at address " + bestBlock.startAddress +
                     ", and the internal fragmentation is " + bestBlock.internalFragmentation);
             return true;
@@ -147,7 +145,6 @@ public class MemorySimulator {
         return false;
     }
 
-    // Worst-Fit Allocation
     public static boolean allocateWorstFit(MemoryBlock[] memory, String processID, int processSize) {
         MemoryBlock worstBlock = null;
         for (MemoryBlock block : memory) {
@@ -160,7 +157,7 @@ public class MemorySimulator {
         if (worstBlock != null) {
             worstBlock.status = "allocated";
             worstBlock.processID = processID;
-            worstBlock.internalFragmentation = worstBlock.blockSize - processSize; // Calculate internal fragmentation
+            worstBlock.internalFragmentation = worstBlock.blockSize - processSize;
             System.out.println(processID + " Allocated at address " + worstBlock.startAddress +
                     ", and the internal fragmentation is " + worstBlock.internalFragmentation);
             return true;
