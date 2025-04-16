@@ -110,7 +110,10 @@ public class MemorySimulator {
 
         scanner.close();
     }
-
+ /**
+     * Allocates memory using the First Fit strategy:
+     * Finds the first free block that is large enough for the process.
+     */
     public static boolean allocateFirstFit(MemoryBlock[] memory, String processID, int processSize) {
         for (MemoryBlock block : memory) {
             if (block.status.equals("free") && block.blockSize >= processSize) {
@@ -124,7 +127,10 @@ public class MemorySimulator {
         }
         return false;
     }
-
+/**
+     * Allocates memory using the Best Fit strategy:
+     * Finds the smallest free block that fits the process.
+     */
     public static boolean allocateBestFit(MemoryBlock[] memory, String processID, int processSize) {
         MemoryBlock bestBlock = null;
         for (MemoryBlock block : memory) {
@@ -144,7 +150,10 @@ public class MemorySimulator {
         }
         return false;
     }
-
+ /**
+     * Allocates memory using the Worst Fit strategy:
+     * Finds the largest free block that fits the process.
+     */
     public static boolean allocateWorstFit(MemoryBlock[] memory, String processID, int processSize) {
         MemoryBlock worstBlock = null;
         for (MemoryBlock block : memory) {
