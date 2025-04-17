@@ -92,8 +92,8 @@ public class MemorySimulator {
                     System.out.println("==========================================================");
                     for (int i = 0; i < memory.length; i++) {
                         MemoryBlock b = memory[i];
-                        String frag = b.status.equals("allocated") ? String.valueOf(b.internalFragmentation) : "-";
-                        System.out.printf("Block%-2d  %-4d  %-5d-%-5d  %-9s  %-9s  %s\n",
+                        String frag = b.status.equals("allocated") ? String.valueOf(b.internalFragmentation) : "0";
+                        System.out.printf("Block%-2d  %-4d  %-5d %-5d  %-9s  %-9s  %s\n",
                                 i, b.blockSize, b.startAddress, b.endAddress,
                                 b.status, b.processID, frag);
                     }
